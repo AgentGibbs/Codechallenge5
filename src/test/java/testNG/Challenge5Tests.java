@@ -1,10 +1,7 @@
 package testNG;
 
-import org.eclipse.jetty.io.ClientConnectionFactory.Helper;
 import org.testng.*;
 import org.testng.annotations.*;
-import org.testng.asserts.*;
-
 import seleniumLaunchers.SeleniumLauncher;
 import skiUtahPageClasses.SkiUtahAllServicesPage;
 
@@ -21,28 +18,15 @@ public class Challenge5Tests {
 		page = launcher.getPage();
 	}
 
+
 	@Test
-	public void CheckTitle()
+	public void SendSearchStrings()
 	{
-		Assert.assertEquals(page.getPageTitle(), "All Services - Ski Utah");
-	}
-	
-	@Test
-	public void SendStrings()
-	{
-		//	page.navigateToDefault();
-		page.Search("Ski school", "clinics", "all resorts");
+		page.Search("ski school", "clinic", "all");
 		page.getAllResults();
+		Assert.assertTrue(page.getResultsListSize()>0);
+		
 	}
-	
-	
-	@Test
-	public void GetResults()
-	{
-	//	page.getPageResults();
-		//Assert.assertTrue(page.getResultsSize()>0);
-	}
-	
 	
 	@AfterSuite
 	public void CloseTests()

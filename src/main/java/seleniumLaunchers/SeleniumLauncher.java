@@ -24,15 +24,4 @@ public class SeleniumLauncher {
 	public SkiUtahAllServicesPage getPage() {
 		return page;
 	}
-	
-	public void SearchOnPage(String what, String subCat, String resort)
-	{
-		page.Search(what, subCat, resort);
-	}
-	
-	public void getResults()
-	{
-		page.getPageResults();
-	} 
-	
 }

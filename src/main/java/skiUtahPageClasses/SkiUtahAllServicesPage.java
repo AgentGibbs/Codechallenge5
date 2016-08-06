@@ -18,6 +18,9 @@ public class SkiUtahAllServicesPage extends SkiUtahWebPage {
 	private WebElement searchForSubCategoryDropdown;
 	private WebElement searchByResortDropdown;
 	private ArrayList<WebElement> resultsList;
+	private WebElement nextPageArrow;
+
+	// constructors
 
 	public SkiUtahAllServicesPage() {
 		WebDriver driver = new ChromeDriver();
@@ -33,6 +36,17 @@ public class SkiUtahAllServicesPage extends SkiUtahWebPage {
 		navigateToDefault();
 		attemptToFindSearchBoxes();
 	}
+
+	// getters
+	public ArrayList<WebElement> getResultsList() {
+		return resultsList;
+	}
+
+	public int getResultsListSize() {
+		return resultsList.size();
+	}
+
+	// methods
 
 	private void attemptToFindSearchBoxes() {
 		try {
@@ -55,37 +69,45 @@ public class SkiUtahAllServicesPage extends SkiUtahWebPage {
 		} catch (Exception e) {
 
 		}
+		// Send strings to Web Elements
 		searchForWhatDropdown.sendKeys(search1);
 		searchForSubCategoryDropdown.sendKeys(search2);
 		searchByResortDropdown.sendKeys(search3);
-
+		// find ok button and click it
 		WebElement okSubmit = browserDriver.findElement(By.name("filter-form-submit"));
 
 		okSubmit.click();
 	}
 
 	public void getAllResults() {
+		// collects all the results from all results pages.
 		getPageResults();
-		WebElement nextPageArrow = browserDriver.findElement(By.cssSelector("span.BatchLinks-next"));
 
-		boolean moreResultsOnNextPage = true;
+		while (canClickToNextResultsPage() == true) {
+			nextPageArrow.click();
+			System.out.println("Arrow clicked");
+			helper.Wait(5000);
+			getPageResults();
 
-		while (moreResultsOnNextPage == true) {
-			
-			
-			if (nextPageArrow == null) {
-				moreResultsOnNextPage = false;
-			} else {
-				nextPageArrow.click();
-				System.out.println("Arrow clicked");
-				helper.Wait(5000);
-				getPageResults();
-			}
 		}
 
 	}
 
+	private boolean canClickToNextResultsPage() {
+		boolean ret = true;
+		try {// Try to find the "click to next page" element
+			nextPageArrow = browserDriver
+					.findElement(By.xpath("//*[@id=\"load-more-items\"]/div[5]/div/div/div[3]/a/span"));
+
+		} catch (NoSuchElementException e) {// can't be found
+			nextPageArrow = null;
+			ret = false;
+		}
+		return ret;
+	}
+
 	public void getPageResults() {
+		// gets results for a single search page.
 		List<WebElement> pageOfResults = browserDriver.findElements(By.cssSelector("div.ListingResults-item"));
 		for (int i = 0; i < pageOfResults.size(); i++) {
 			resultsList.add(pageOfResults.get(i));
