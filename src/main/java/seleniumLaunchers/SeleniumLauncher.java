@@ -22,6 +22,7 @@ public class SeleniumLauncher {
 	}
 
 	public SkiUtahAllServicesPage getPage() {
+		String unused = "This is a new string that can be used to show the difference in Github"
 		return page;
 	}
 }
